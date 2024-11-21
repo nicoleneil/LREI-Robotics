@@ -115,15 +115,33 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
     final double INTAKE_DEPOSIT    =  0.5;
 
     /* Variables to store the positions that the wrist should be set to when folding in, or folding out. */
-    /* Original Positions
+    /*  ORIGINAL GOBILDA CODE - When viewed from the front of the robot WFI is left of the arm & WFO is a clockwise 90 degree movement 
     final double WRIST_FOLDED_IN   = 0.8333;
     final double WRIST_FOLDED_OUT  = 0.5;
     */
-
-    /* Positions for OUR specific servo orientation*/
+    
+    /* Current Positions for OUR specific servo orientation 
+    * When viewed from the front of the robot WFI is right of the arm & WFO is a counterclockwise 90 degree rotation
+    */
     final double WRIST_FOLDED_IN   = 0.5;
     final double WRIST_FOLDED_OUT  = 0.8333;
+    
+    /* Important General Servo Info
+    * Wrist values can ONLY be set between 0 and 1 (inclusive)
+    * gobilda Servo can rotate 300 degrees on factory settings, OR 270 degrees after being set to Servo mode with the programmer
+    * Every .3333 = 90 degree movement
+    */
 
+    /* Important Positional & Orientation Info for OUR Servo when viewed from the FRONT of the robot
+    * Wrist starting position CANNOT be set to less than 0.5 (will cause the arm to move clockwise into the robot upon initialization)
+    * Wrist CANNOT move to a position beyond 45 degrees left of the arm
+    * Subtracting Degrees moves wrist clockwise
+    * Adding Degrees moves wrist counterclockwise
+    * Position 0.5 = 135 degrees !!NOT 0 degrees!!
+    * Position 0.8333 = 225 degrees
+    * Position 1.0 = 270 degrees
+    */
+    
     /* A number in degrees that the triggers can adjust the arm position by */
     final double FUDGE_FACTOR = 15 * ARM_TICKS_PER_DEGREE;
 
@@ -287,6 +305,7 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
                 else if (gamepad1.y){
                     /* This is the correct height to score the sample in the LOW BASKET */
                     armPosition = ARM_SCORE_SAMPLE_IN_LOW;
+                    wrist.setPosition(WRIST_FOLDED_OUT);
                 }
 
                 else if (gamepad1.dpad_left) {
@@ -300,7 +319,6 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
                 else if (gamepad1.dpad_right){
                     /* This is the correct height to score SPECIMEN on the HIGH CHAMBER */
                     armPosition = ARM_SCORE_SPECIMEN;
-                    wrist.setPosition(WRIST_FOLDED_IN);
                 }
 
                 else if (gamepad1.dpad_up){
