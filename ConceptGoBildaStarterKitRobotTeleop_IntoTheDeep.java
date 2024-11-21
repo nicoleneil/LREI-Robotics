@@ -115,25 +115,27 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
     final double INTAKE_DEPOSIT    =  0.5;
 
     /* Variables to store the positions that the wrist should be set to when folding in, or folding out. */
-    /*  ORIGINAL GOBILDA CODE - When viewed from the front of the robot WFI is left of the arm & WFO is a clockwise 90 degree movement 
+    /*  ORIGINAL GOBILDA CODE (direct comparison views robot from the front)
+    * WFI is left of the arm & WFO is a clockwise 90 degree rotation 
     final double WRIST_FOLDED_IN   = 0.8333;
     final double WRIST_FOLDED_OUT  = 0.5;
     */
     
-    /* Current Positions for OUR specific servo orientation 
-    * When viewed from the front of the robot WFI is right of the arm & WFO is a counterclockwise 90 degree rotation
+    /* Current Positions for OUR specific servo orientation (direct comparison views robot from the front)
+    * WFI is right of the arm & WFO is a counterclockwise 90 degree movement
     */
     final double WRIST_FOLDED_IN   = 0.5;
     final double WRIST_FOLDED_OUT  = 0.8333;
     
     /* Important General Servo Info
     * Wrist values can ONLY be set between 0 and 1 (inclusive)
-    * gobilda Servo can rotate 300 degrees on factory settings, OR 270 degrees after being set to Servo mode with the programmer
+    * gobilda Servo can rotate 300 degrees on factory settings
+    * gobilda Servo can rotate 270 degrees after being set to Servo mode with the programmer
     * Every .3333 = 90 degree movement
     */
 
-    /* Important Positional & Orientation Info for OUR Servo when viewed from the FRONT of the robot
-    * Wrist starting position CANNOT be set to less than 0.5 (will cause the arm to move clockwise into the robot upon initialization)
+    /* Important Positional Info for OUR Servo (viewed from the FRONT of the robot)
+    * Wrist starting position CANNOT be set to less than 0.5 (will move into arm upon initialization)
     * Wrist CANNOT move to a position beyond 45 degrees left of the arm
     * Subtracting Degrees moves wrist clockwise
     * Adding Degrees moves wrist counterclockwise
