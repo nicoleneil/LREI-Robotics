@@ -104,8 +104,11 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
     final double ARM_COLLAPSED_INTO_ROBOT  = 0;
     final double ARM_COLLECT               = 250 * ARM_TICKS_PER_DEGREE;
     final double ARM_CLEAR_BARRIER         = 230 * ARM_TICKS_PER_DEGREE;
-    final double ARM_SCORE_SPECIMEN        = 160 * ARM_TICKS_PER_DEGREE;
-    final double ARM_SCORE_SAMPLE_IN_LOW   = 160 * ARM_TICKS_PER_DEGREE;
+    // ARM_SCORE_SPECIMEN --> ARM_SCORE_LOW_SPECIMEN
+    final double ARM_SCORE_LOW_SPECIMEN    = 205 * ARM_TICKS_PER_DEGREE;
+    // ARM_SCORE_SAMPLE_IN_LOW --> ARM_SCORE_LOW_SAMPLE
+    // NB! Low Sample Height = High Chamber Height
+    final double ARM_SCORE_LOW_SAMPLE      = 160 * ARM_TICKS_PER_DEGREE;
     final double ARM_ATTACH_HANGING_HOOK   = 120 * ARM_TICKS_PER_DEGREE;
     final double ARM_WINCH_ROBOT           = 15  * ARM_TICKS_PER_DEGREE;
 
@@ -145,11 +148,11 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
     */
     
     /* A number in degrees that the triggers can adjust the arm position by */
-    final double FUDGE_FACTOR = 15 * ARM_TICKS_PER_DEGREE;
+    // final double FUDGE_FACTOR = 15 * ARM_TICKS_PER_DEGREE;
 
     /* Variables that are used to set the arm to a specific position */
     double armPosition = (int)ARM_COLLAPSED_INTO_ROBOT;
-    double armPositionFudgeFactor;
+    // double armPositionFudgeFactor;
 
 
     @Override
@@ -277,9 +280,16 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
             both triggers an equal amount, they cancel and leave the arm at zero. But if one is larger
             than the other, it "wins out". This variable is then multiplied by our FUDGE_FACTOR.
             The FUDGE_FACTOR is the number of degrees that we can adjust the arm by with this function. */
-
-            armPositionFudgeFactor = FUDGE_FACTOR * (gamepad1.right_trigger + (-gamepad1.left_trigger));
-
+            
+            // armPositionFudgeFactor = FUDGE_FACTOR * (gamepad1.right_trigger + (-gamepad1.left_trigger));
+            // CURRENTLY DO NOT NEED - Triggers used for wrist position instead
+            
+            // Left Trigger sets Wrist to Flicked In, Right Trigger sets Wrist to Flicked Out 
+            if (gamepad1.right_trigger != 0) {
+                wrist.setPosition(WRIST_FOLDED_OUT);
+            } else if (gamepad1.left_trigger != 0) {
+                wrist.setPosition(WRIST_FOLDED_IN);
+            }
 
 
             /* Here we implement a set of if else loops to set our arm to different scoring positions.
@@ -306,8 +316,11 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
 
                 else if (gamepad1.y){
                     /* This is the correct height to score the sample in the LOW BASKET */
-                    armPosition = ARM_SCORE_SAMPLE_IN_LOW;
+                    armPosition = ARM_SCORE_LOW_SAMPLE;
                     wrist.setPosition(WRIST_FOLDED_OUT);
+                    
+                    /* This is ALSO the correct height to score the Specimen in the HIGH CHAMBER
+                     * To score Specimen, also press LT (Left Trigger) so Wrist is Flicked In */
                 }
 
                 else if (gamepad1.dpad_left) {
@@ -319,8 +332,8 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
                 }
 
                 else if (gamepad1.dpad_right){
-                    /* This is the correct height to score SPECIMEN on the HIGH CHAMBER */
-                    armPosition = ARM_SCORE_SPECIMEN;
+                    /* This is the correct height to score SPECIMEN on the LOW CHAMBER */
+                    armPosition = ARM_SCORE_LOW_SPECIMEN;
                 }
 
                 else if (gamepad1.dpad_up){
@@ -340,7 +353,8 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
             /* Here we set the target position of our arm to match the variable that was selected
             by the driver.
             We also set the target velocity (speed) the motor runs at, and use setMode to run it.*/
-            armMotor.setTargetPosition((int) (armPosition  +armPositionFudgeFactor));
+            // armMotor.setTargetPosition((int) (armPosition  +armPositionFudgeFactor));
+            armMotor.setTargetPosition((int) (armPosition));
 
             ((DcMotorEx) armMotor).setVelocity(2100);
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
