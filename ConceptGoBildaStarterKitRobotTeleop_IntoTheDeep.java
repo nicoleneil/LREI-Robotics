@@ -106,8 +106,7 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
     final double ARM_CLEAR_BARRIER         = 230 * ARM_TICKS_PER_DEGREE;
     // ARM_SCORE_SPECIMEN --> ARM_SCORE_LOW_SPECIMEN
     final double ARM_SCORE_LOW_SPECIMEN    = 205 * ARM_TICKS_PER_DEGREE;
-    // ARM_SCORE_SAMPLE_IN_LOW --> ARM_SCORE_LOW_SAMPLE
-    // NB! Low Sample Height = High Chamber Height
+    // ARM_SCORE_SAMPLE_IN_LOW --> ARM_SCORE_LOW_SAMPLE (Remember Low Basket Height = High Chamber Height)
     final double ARM_SCORE_LOW_SAMPLE      = 160 * ARM_TICKS_PER_DEGREE;
     final double ARM_ATTACH_HANGING_HOOK   = 120 * ARM_TICKS_PER_DEGREE;
     final double ARM_WINCH_ROBOT           = 15  * ARM_TICKS_PER_DEGREE;
@@ -118,33 +117,28 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
     final double INTAKE_DEPOSIT    =  0.5;
 
     /* Variables to store the positions that the wrist should be set to when folding in, or folding out. */
-    /*  ORIGINAL GOBILDA CODE (direct comparison views robot from the front)
-    * WFI is left of the arm & WFO is a clockwise 90 degree rotation 
+    /* ORIGINAL GOBILDA CODE 
+    * WFI is left of the arm & WFO is a clockwise 90 degree rotation (robot viewed from front)
     final double WRIST_FOLDED_IN   = 0.8333;
     final double WRIST_FOLDED_OUT  = 0.5;
     */
     
-    /* Current Positions for OUR specific servo orientation (direct comparison views robot from the front)
-    * WFI is right of the arm & WFO is a counterclockwise 90 degree movement
-    */
+    /* Variables to store the positions for the wrist with OUR specific servo in its current orientation
+    * WFI is right of the arm & WFO is a counterclockwise 90 degree rotation (robot viewed from front) */
     final double WRIST_FOLDED_IN   = 0.5;
     final double WRIST_FOLDED_OUT  = 0.8333;
     
-    /* Important General Servo Info
+    /* Important General GOBILDA Servo Info
+    * Servo can rotate 300 degrees on factory settings OR 270 degrees in Servo mode set by programmer
     * Wrist values can ONLY be set between 0 and 1 (inclusive)
-    * gobilda Servo can rotate 300 degrees on factory settings
-    * gobilda Servo can rotate 270 degrees after being set to Servo mode with the programmer
-    * Every .3333 = 90 degree movement
+    * Every .3333 code value = 90 degree rotation
     */
 
     /* Important Positional Info for OUR Servo (viewed from the FRONT of the robot)
     * Wrist starting position CANNOT be set to less than 0.5 (will move into arm upon initialization)
-    * Wrist CANNOT move to a position beyond 45 degrees left of the arm
-    * Subtracting Degrees moves wrist clockwise
-    * Adding Degrees moves wrist counterclockwise
-    * Position 0.5 = 135 degrees !!NOT 0 degrees!!
-    * Position 0.8333 = 225 degrees
-    * Position 1.0 = 270 degrees
+    * Wrist CANNOT rotate to a position beyond 45 degrees left of the arm
+    * Subtracting Degrees rotates wrist clockwise, Adding Degrees rotates wrist counterclockwise
+    * Position 0.5 = 135 degrees (NOT TRUE 0), Position 0.8333 = 225 degrees, Position 1.0 = 270 degrees
     */
     
     /* A number in degrees that the triggers can adjust the arm position by */
@@ -221,7 +215,6 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
             forward = -gamepad1.left_stick_y;
             rotate  = gamepad1.right_stick_x;
 
-
             /* Here we "mix" the input channels together to find the power to apply to each motor.
             The both motors need to be set to a mix of how much you're retesting the robot move
             forward, and how much you're requesting the robot turn. When you ask the robot to rotate
@@ -253,7 +246,7 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
             If the user presses A, it sets the intake power to the final variable that
             holds the speed we want to collect at.
             If the user presses X, it sets the servo to Off.
-            And if the user presses B it reveres the servo to spit out the element.*/
+            And if the user presses B it reverses the servo to spit out the element.*/
 
             /* TECH TIP: If Else loops:
             We're using an else if loop on "gamepad1.x" and "gamepad1.b" just in case
@@ -282,9 +275,9 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
             The FUDGE_FACTOR is the number of degrees that we can adjust the arm by with this function. */
             
             // armPositionFudgeFactor = FUDGE_FACTOR * (gamepad1.right_trigger + (-gamepad1.left_trigger));
-            // CURRENTLY DO NOT NEED - Triggers used for wrist position instead
+            // CURRENTLY DO NOT NEED FUDGE_FACTOR (all commented out) >> Triggers used for wrist position 
             
-            // Left Trigger sets Wrist to Flicked In, Right Trigger sets Wrist to Flicked Out 
+            // Left Trigger sets Wrist to Folded In, Right Trigger sets Wrist to Folded Out 
             if (gamepad1.right_trigger != 0) {
                 wrist.setPosition(WRIST_FOLDED_OUT);
             } else if (gamepad1.left_trigger != 0) {
@@ -317,10 +310,10 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
                 else if (gamepad1.y){
                     /* This is the correct height to score the sample in the LOW BASKET */
                     armPosition = ARM_SCORE_LOW_SAMPLE;
-                    wrist.setPosition(WRIST_FOLDED_OUT);
+                    wrist.setPosition(WRIST_FOLDED_OUT); //makes sample scoring easier
                     
                     /* This is ALSO the correct height to score the Specimen in the HIGH CHAMBER
-                     * To score Specimen, also press LT (Left Trigger) so Wrist is Flicked In */
+                     * To score Specimen, next press LT (Left Trigger) so Wrist is Folded In */
                 }
 
                 else if (gamepad1.dpad_left) {
@@ -344,7 +337,7 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
                 }
 
                 else if (gamepad1.dpad_down){
-                    /* this moves the arm down to lift the robot up once it has been hooked */
+                    /* This moves the arm down to lift the robot up once it has been hooked */
                     armPosition = ARM_WINCH_ROBOT;
                     intake.setPower(INTAKE_OFF);
                     wrist.setPosition(WRIST_FOLDED_IN);
@@ -383,7 +376,6 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
             if (((DcMotorEx) armMotor).isOverCurrent()){
                 telemetry.addLine("MOTOR EXCEEDED CURRENT LIMIT!");
             }
-
 
             /* send telemetry to the driver of the arm's current position and target position */
             telemetry.addData("armTarget: ", armMotor.getTargetPosition());
