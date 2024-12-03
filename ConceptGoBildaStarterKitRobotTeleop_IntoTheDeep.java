@@ -142,11 +142,11 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
     */
     
     /* A number in degrees that the triggers can adjust the arm position by */
-    // final double FUDGE_FACTOR = 15 * ARM_TICKS_PER_DEGREE;
+    final double FUDGE_FACTOR = 15 * ARM_TICKS_PER_DEGREE;
 
     /* Variables that are used to set the arm to a specific position */
     double armPosition = (int)ARM_COLLAPSED_INTO_ROBOT;
-    // double armPositionFudgeFactor;
+    double armPositionFudgeFactor;
 
 
     @Override
@@ -226,8 +226,7 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
 
             /* Normalize the values so neither exceed +/- 1.0 */
             max = Math.max(Math.abs(left), Math.abs(right));
-            if (max > 1.0)
-            {
+            if (max > 1.0) {
                 left /= max;
                 right /= max;
             }
@@ -275,12 +274,17 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
             The FUDGE_FACTOR is the number of degrees that we can adjust the arm by with this function. */
             
             // armPositionFudgeFactor = FUDGE_FACTOR * (gamepad1.right_trigger + (-gamepad1.left_trigger));
-            // CURRENTLY DO NOT NEED FUDGE_FACTOR (all commented out) >> Triggers used for wrist position 
             
-            // Left Trigger sets Wrist to Folded In, Right Trigger sets Wrist to Folded Out 
-            if (gamepad1.right_trigger != 0) {
+            /* CURRENTLY DO NOT NEED armPositionFudgeFactor  
+             * Left Trigger sets Wrist to Folded In, Right Trigger sets Wrist to Folded Out 
+             * Triggers are analog controls so they produce floats (decimal values) that are used by this code
+             * Conditional Statements (if/else/while) ONLY use booleans (true/false values)
+             * Trigger is naturally set to O,  to check if the trigger wad prcheck if trigger provides value > 0
+            */
+            if (gamepad1.right_trigger != 0) { 
                 wrist.setPosition(WRIST_FOLDED_OUT);
-            } else if (gamepad1.left_trigger != 0) {
+            } 
+            else if (gamepad1.left_trigger != 0) {
                 wrist.setPosition(WRIST_FOLDED_IN);
             }
 
@@ -292,7 +296,7 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
             it folds out the wrist to make sure it is in the correct orientation to intake, and it
             turns the intake on to the COLLECT mode.*/
 
-            if(gamepad1.right_bumper){
+            if (gamepad1.right_bumper){
                 /* This is the intaking/collecting arm position */
                 armPosition = ARM_COLLECT;
                 wrist.setPosition(WRIST_FOLDED_OUT);
@@ -346,8 +350,7 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
             /* Here we set the target position of our arm to match the variable that was selected
             by the driver.
             We also set the target velocity (speed) the motor runs at, and use setMode to run it.*/
-            // armMotor.setTargetPosition((int) (armPosition  +armPositionFudgeFactor));
-            armMotor.setTargetPosition((int) (armPosition));
+            armMotor.setTargetPosition((int) (armPosition  +armPositionFudgeFactor));
 
             ((DcMotorEx) armMotor).setVelocity(2100);
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
