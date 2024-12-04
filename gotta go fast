@@ -100,9 +100,7 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
                 right /= max;
             }
             
-            left *=0.50;
-            right *=0.50;
-
+         
             leftDrive.setPower(left);
             rightDrive.setPower(right);
 
