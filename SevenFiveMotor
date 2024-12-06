@@ -9,9 +9,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
-@TeleOp(name="FTC Starter Kit Example Robot (INTO THE DEEP)", group="Robot")
+@TeleOp(name="75%:)", group="Robot")
 //@Disabled
-public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMode {
+public class SevenFiveMotor extends LinearOpMode {
 
     public DcMotor  leftDrive   = null; //the left drivetrain motor
     public DcMotor  rightDrive  = null; //the right drivetrain motor
@@ -35,9 +35,9 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
     final double INTAKE_OFF        =  0.0;
     final double INTAKE_DEPOSIT    =  0.5;
 
-    final double WRIST_FOLDED_IN   = 0.5;
-    final double WRIST_FOLDED_OUT  = 0.8333;
-    
+    final double WRIST_FOLDED_IN   = 0.4444;
+    final double WRIST_FOLDED_OUT  = 0.7888;
+   
     final double FUDGE_FACTOR = 15 * ARM_TICKS_PER_DEGREE;
 
     double armPosition = (int)ARM_COLLAPSED_INTO_ROBOT;
