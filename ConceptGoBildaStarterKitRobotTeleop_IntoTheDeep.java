@@ -388,3 +388,18 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
         }
     }
 }
+/* code for mecanum wheels:
+
+ double y = -gamepad1.left_stick_y; // Remember, Y stick is reversed!
+
+#leftMotor.setPower(y);
+#rightMotor.setPower(y);
+
+
+double y = -gamepad1.left_stick_y; // Remember, Y stick is reversed!
+double rx = gamepad1.right_stick_x;
+
+leftMotor.setPower(y + rx);
+rightMotor.setPower(y - rx);
+
+will this work? hopefully. */
