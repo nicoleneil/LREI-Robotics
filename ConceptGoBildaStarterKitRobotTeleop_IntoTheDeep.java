@@ -73,6 +73,11 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
     /* Declare OpMode members. */
     public DcMotor  leftDrive   = null; //the left drivetrain motor
     public DcMotor  rightDrive  = null; //the right drivetrain motor
+    /*    // Declare motor variables
+    public DcMotor frontLeftMotor = null; 
+    public DcMotor frontRightMotor = null;
+    public DcMotor backLeftMotor = null;
+    public DcMotor backRightMotor = null; */
     public DcMotor  armMotor    = null; //the arm motor
     public CRServo  intake      = null; //the active intake servo
     public Servo    wrist       = null; //the wrist servo
@@ -164,6 +169,11 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
         /* Define and Initialize Motors */
         leftDrive  = hardwareMap.get(DcMotor.class, "left_front_drive"); //the left drivetrain motor
         rightDrive = hardwareMap.get(DcMotor.class, "right_front_drive"); //the right drivetrain motor
+        /* frontLeftMotor = hardwareMap.dcMotor.get("frontLeft");
+        frontRightMotor = hardwareMap.dcMotor.get("frontRight");
+        backLeftMotor = hardwareMap.dcMotor.get("backLeft");
+        backRightMotor = hardwareMap.dcMotor.get("backRight");*/
+        
         armMotor   = hardwareMap.get(DcMotor.class, "left_arm"); //the arm motor
 
 
@@ -171,6 +181,12 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
         for this robot, we reverse the right motor.*/
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        /*        
+        frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
+        backRightMotor.setDirection(DcMotor.Direction.REVERSE); */
 
 
         /* Setting zeroPowerBehavior to BRAKE enables a "brake mode". This causes the motor to slow down
@@ -224,6 +240,20 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
             left  = forward + rotate;
             right = forward - rotate;
 
+
+            /*           
+            // Read gamepad values
+            double y = -gamepad1.left_stick_y; // Inverted Y axis for forward/backward
+            double x = gamepad1.left_stick_x; // Strafing
+            double rx = gamepad1.right_stick_x; // Rotation
+            
+            // Calculate wheel powers based on mecanum math
+            double frontLeftPower = y + x + rx;
+            double frontRightPower = y - x + rx;
+            double backLeftPower = y - x - rx;
+            double backRightPower = y + x - rx;*/
+
+            
             /* Normalize the values so neither exceed +/- 1.0 */
             max = Math.max(Math.abs(left), Math.abs(right));
             if (max > 1.0) {
@@ -239,7 +269,14 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
             leftDrive.setPower(left);
             rightDrive.setPower(right);
 
+            // Set motor powers
+            /*frontLeftMotor.setPower(frontLeftPower);
+            frontRightMotor.setPower(frontRightPower);
+            backLeftMotor.setPower(backLeftPower);
+            backRightMotor.setPower(backRightPower); */
 
+
+            
             /* Here we handle the three buttons that have direct control of the intake speed.
             These control the continuous rotation servo that pulls elements into the robot,
             If the user presses A, it sets the intake power to the final variable that
