@@ -1,0 +1,49 @@
+// **Driver Input Mapping**
+forward = -Y;          // Forward/backward motion
+right = X;             // Left/right strafing
+clockwise = Z * K;     // Rotation (with sensitivity tuning K)
+
+// Ensure K is within a safe range
+if (K > 1) K = 1;
+if (K < 0) K = 0;
+
+// **Optional: Field-Centric Control (if using a gyro)**
+if (field_centric_enabled) {
+    float theta_rad = theta * (PI / 180.0); // Convert theta to radians if in degrees
+    float temp = forward * cos(theta_rad) + right * sin(theta_rad);
+    right = -forward * sin(theta_rad) + right * cos(theta_rad);
+    forward = temp;
+}
+
+// **Inverse Kinematics for Wheel Speeds**
+front_left = forward + clockwise + right;
+front_right = forward - clockwise - right;
+rear_left = forward + clockwise - right;
+rear_right = forward - clockwise + right;
+
+// **Normalize Wheel Speeds**
+float max_speed = max(abs(front_left), max(abs(front_right), max(abs(rear_left), abs(rear_right))));
+if (max_speed > 1.0) {
+    front_left /= max_speed;
+    front_right /= max_speed;
+    rear_left /= max_speed;
+    rear_right /= max_speed;
+}
+
+// **Output to Motors**
+setMotorSpeed(front_left_motor, front_left);
+setMotorSpeed(front_right_motor, front_right);
+setMotorSpeed(rear_left_motor, rear_left);
+setMotorSpeed(rear_right_motor, rear_right);
+
+
+/* joystick deadband */  
+if (abs(forward) < 0.05) forward = 0;
+if (abs(right) < 0.05) right = 0;
+if (abs(clockwise) < 0.05) clockwise = 0;
+
+
+/* accselration limet */ 
+forward = smoothValue(forward, prev_forward, acceleration_limit);
+right = smoothValue(right, prev_right, acceleration_limit);
+clockwise = smoothValue(clockwise, prev_clockwise, rotation_limit);
