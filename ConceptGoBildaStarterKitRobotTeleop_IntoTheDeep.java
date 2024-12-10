@@ -73,7 +73,7 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
     /* Declare OpMode members. */
     public DcMotor  leftDrive   = null; //the left drivetrain motor
     public DcMotor  rightDrive  = null; //the right drivetrain motor
-    /*    // Declare motor variables
+    /*    // for macanum wheels:
     public DcMotor frontLeftMotor = null; 
     public DcMotor frontRightMotor = null;
     public DcMotor backLeftMotor = null;
@@ -169,7 +169,8 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
         /* Define and Initialize Motors */
         leftDrive  = hardwareMap.get(DcMotor.class, "left_front_drive"); //the left drivetrain motor
         rightDrive = hardwareMap.get(DcMotor.class, "right_front_drive"); //the right drivetrain motor
-        /* frontLeftMotor = hardwareMap.dcMotor.get("frontLeft");
+        /* for macanum wheels: 
+        frontLeftMotor = hardwareMap.dcMotor.get("frontLeft");
         frontRightMotor = hardwareMap.dcMotor.get("frontRight");
         backLeftMotor = hardwareMap.dcMotor.get("backLeft");
         backRightMotor = hardwareMap.dcMotor.get("backRight");*/
@@ -182,7 +183,7 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        /*        
+        /*        for macanum wheels:
         frontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backLeftMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -242,6 +243,7 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
 
 
             /*           
+            // For macanum wheels:
             // Read gamepad values
             double y = -gamepad1.left_stick_y; // Inverted Y axis for forward/backward
             double x = gamepad1.left_stick_x; // Strafing
@@ -269,6 +271,7 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
             leftDrive.setPower(left);
             rightDrive.setPower(right);
 
+            // For macanum wheels:
             // Set motor powers
             /*frontLeftMotor.setPower(frontLeftPower);
             frontRightMotor.setPower(frontRightPower);
@@ -425,18 +428,5 @@ public class ConceptGoBildaStarterKitRobotTeleop_IntoTheDeep extends LinearOpMod
         }
     }
 }
-/* code for mecanum wheels:
-
- double y = -gamepad1.left_stick_y; // Remember, Y stick is reversed!
-
-#leftMotor.setPower(y);
-#rightMotor.setPower(y);
-
-
-double y = -gamepad1.left_stick_y; // Remember, Y stick is reversed!
-double rx = gamepad1.right_stick_x;
-
-leftMotor.setPower(y + rx);
-rightMotor.setPower(y - rx);
 
 will this work? hopefully. */
