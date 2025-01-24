@@ -27,20 +27,14 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-/*
- * This OpMode illustrates the concept of driving a path based on time.
- * The code is structured as a LinearOpMode. 
- * The desired path is: Drive forward from Observation Zone Corner to Net Zone Corner
- */
-
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Autonomous(name="Robot: Auto Net Zone Park By Time", group="Robot")
 
@@ -51,6 +45,36 @@ public class AutoNetZonePark_IntoTheDeep extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
+    private DcMotor armMotor = null; 
+    private CRServo intake = null; 
+    private Servo   wrist = null; 
+    
+    
+    final double ARM_TICKS_PER_DEGREE = 19.7924893140647; //exact fraction is (194481/9826)
+
+    final double ARM_COLLAPSED_INTO_ROBOT  = 0;
+    final double ARM_COLLECT               = 250 * ARM_TICKS_PER_DEGREE;
+    final double ARM_CLEAR_BARRIER         = 230 * ARM_TICKS_PER_DEGREE;
+    // ARM_SCORE_SPECIMEN --> ARM_SCORE_LOW_SPECIMEN
+    final double ARM_SCORE_LOW_SPECIMEN    = 205 * ARM_TICKS_PER_DEGREE;
+    // ARM_SCORE_SAMPLE_IN_LOW --> ARM_SCORE_LOW_SAMPLE (Remember Low Basket Height = High Chamber Height)
+    final double ARM_SCORE_LOW_SAMPLE      = 160 * ARM_TICKS_PER_DEGREE;
+    final double ARM_ATTACH_HANGING_HOOK   = 120 * ARM_TICKS_PER_DEGREE;
+    final double ARM_WINCH_ROBOT           = 15  * ARM_TICKS_PER_DEGREE;
+
+    final double INTAKE_COLLECT    = -1.0;
+    final double INTAKE_OFF        =  0.0;
+    final double INTAKE_DEPOSIT    =  0.5;
+
+    final double WRIST_FOLDED_IN   = 0.4444;
+    final double WRIST_FOLDED_OUT  = 0.7888;
+   
+    final double FUDGE_FACTOR = 15 * ARM_TICKS_PER_DEGREE;
+
+    double armPosition = (int)ARM_COLLAPSED_INTO_ROBOT;
+    double armPositionFudgeFactor;
+
+
 
     private ElapsedTime     runtime = new ElapsedTime();
 
@@ -67,6 +91,18 @@ public class AutoNetZonePark_IntoTheDeep extends LinearOpMode {
         leftBackDrive  = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        armMotor = hardwareMap.get(DcMotor.class, "left_arm");
+        
+        
+        ((DcMotorEx) armMotor).setCurrentAlert(5,CurrentUnit.AMPS);
+        armMotor.setTargetPosition(0);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        intake = hardwareMap.get(CRServo.class, "intake");
+        wrist  = hardwareMap.get(Servo.class, "wrist");
+
+
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // When run, this OpMode should start both motors driving forward. So adjust these two lines based on your first test drive.
@@ -96,8 +132,27 @@ public class AutoNetZonePark_IntoTheDeep extends LinearOpMode {
             telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
             telemetry.update();
         }
+        //Step 2: Net score
+        armPosition = ARM_ATTACH_HANGING_HOOK;
+        armMotor.setTargetPosition ((int) (armPosition + armPositionFudgeFactor));
         
-        //Step 2: Reverse speed to drive in observation zone
+        intake.setPower(INTAKE_OFF);
+        wrist.setPosition(WRIST_FOLDED_IN);
+        
+        ((DcMotorEx) armMotor).setVelocity(2100);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        if (((DcMotorEx) armMotor).isOverCurrent()){
+             telemetry.addLine("MOTOR EXCEEDED CURRENT LIMIT!");
+             
+        }
+        
+        while (opModeIsActive() && (runtime.seconds() > 4) && (runtime.seconds() < 7)) {
+            telemetry.addData("Path", "Leg 1: %4.1f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+            
+        //Step 3: Reverse speed to drive in observation zone
         leftFrontDrive.setPower(REVERSE_SPEED);
         leftBackDrive.setPower(REVERSE_SPEED);
         rightFrontDrive.setPower(REVERSE_SPEED);
@@ -108,7 +163,7 @@ public class AutoNetZonePark_IntoTheDeep extends LinearOpMode {
             telemetry.update();
         }        
         
-        // Step 3:  Stop
+        // Step 4:  Stop
         leftFrontDrive.setPower(0);
         leftBackDrive.setPower(0);
         rightFrontDrive.setPower(0);
