@@ -5,9 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="Auto NetSample + Park by Time", group="Robot")
+@Autonomous(name="Auto Net Sample + Park", group="Robot")
 
-public class AutoNetSample_andPark_byTime extends LinearOpMode {
+public class AutoNetSample_and_Park extends LinearOpMode {
 
     /* Declare OpMode members. */
     private DcMotor leftFrontDrive = null;
