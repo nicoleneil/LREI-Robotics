@@ -80,8 +80,8 @@ public class MecanumTeleOp extends LinearOpMode {
     final double INTAKE_OFF        =  0.0;
     final double INTAKE_DEPOSIT    =  0.5;
 
-    final double WRIST_FOLDED_IN   = 0.4444;
-    final double WRIST_FOLDED_OUT  = 0.7888;
+    final double WRIST_FOLDED_IN   = 0.9777;
+    final double WRIST_FOLDED_OUT  = 0.6333;
    
     final double FUDGE_FACTOR = 15 * ARM_TICKS_PER_DEGREE;
 
