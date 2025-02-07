@@ -70,7 +70,7 @@ public class MecanumTeleOp extends LinearOpMode {
     final double ARM_COLLAPSED_INTO_ROBOT  = 0;
     final double ARM_COLLECT               = 250 * ARM_TICKS_PER_DEGREE;
     final double ARM_CLEAR_BARRIER         = 230 * ARM_TICKS_PER_DEGREE;
-    final double ARM_SCORE_LOW_SPECIMEN    = 205 * ARM_TICKS_PER_DEGREE;
+    final double ARM_SCORE_LOW_SPECIMEN    = 210 * ARM_TICKS_PER_DEGREE;
     // Remember Low Basket Height = High Chamber Height
     final double ARM_SCORE_LOW_SAMPLE      = 160 * ARM_TICKS_PER_DEGREE;
     final double ARM_ATTACH_HANGING_HOOK   = 120 * ARM_TICKS_PER_DEGREE;
@@ -193,7 +193,7 @@ public class MecanumTeleOp extends LinearOpMode {
             }
             else if (gamepad1.y) {
                 armPosition = ARM_SCORE_LOW_SAMPLE;
-                wrist.setPosition(WRIST_FOLDED_OUT); //makes sample scoring easier
+                //wrist.setPosition(WRIST_FOLDED_OUT); //makes sample scoring easier
             }
             else if (gamepad1.dpad_left) {
                 armPosition = ARM_COLLAPSED_INTO_ROBOT;
